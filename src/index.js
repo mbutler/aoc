@@ -8,7 +8,7 @@ const characterImg = "../dist/assets/character-card.png"
 const assignButtonImg = "../dist/assets/assign-button.png"
 const ignoreButtonImg = "../dist/assets/ignore-button.png"
 const confirmButtonImg = "../dist/assets/confirm-button.png"
-import {getCard, addCharacter } from "./functions.js"
+import {getCard, addCharacter, toggleCharacterSelection, validateTargets } from "./functions.js"
 
 const screenWidth = 1920  
 const screenHeight = 1080
@@ -51,12 +51,13 @@ class UIScene extends Phaser.Scene {
     create () {
       this.gameStats = this.add.container()
       this.gameStats.setDataEnabled()
-      this.gameStats.setData({"rocket":0,"gameState":0,"card": {"text": "Start"}})
+      this.gameStats.setData({"rocket":0,"gameState":1,"card": {}})
   
       const gameboard = this.add.image(960,540, "gameboard")
   
       const rocketText = this.add.text(58,75, "rocket pieces: " + this.gameStats.data.values.rocket, {fontSize:40, color: "red", backgroundColor: "white", wordWrap: {width: 650}})
       const currentCard = getCard(this.gameStats.data.values.gameState)
+      this.gameStats.data.set("card", currentCard)
       const cardText = this.add.text(58, 275, "card: " + currentCard.text, {fontSize:40, color: "red", backgroundColor: "white", wordWrap: {width: 650}})
       const progressText = this.add.text(58, 575, "stage completion: " + ((this.gameStats.data.values.gameState/16*100) + "%"),{fontSize:40, color: "red", backgroundColor: "white", wordWrap: {width: 650}})
       

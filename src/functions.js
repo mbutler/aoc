@@ -60,17 +60,24 @@ export function addCharacter(scene, x, y, key, content) {
     character.setDataEnabled()
     character.setData(content)
     background.on('pointerdown', () => {
-        console.log(character.name)
-        console.log("Health: " + character.data.values.health)
-        toggleCharacterSelection(character)
+        toggleCharacterSelection(character, scene)
+        console.log("targets validated? " + validateTargets(scene))
     }, this)
     character.add([background, characterName, characterHealth, characterSkills])
     return character
 }
 
-function toggleCharacterSelection(character) {
+/**
+ * Toggles the visual selection and is_selected in container data
+ * @memberof Functions
+ * @param {object} character - a character's container object
+ * @param {object} scene - optional scene object to return array of selected characters
+ * @return {array} An array of currently selected character containers
+ */
+export function toggleCharacterSelection(character, scene) {
     const children = character.list
-    let sprite
+    let sprite, characterList
+    let selected = []
     children.forEach(child => {
         if (child.type == "Sprite") {
             sprite = child
@@ -83,6 +90,16 @@ function toggleCharacterSelection(character) {
     } else {
         character.data.set("is_selected", false)
         sprite.setAlpha(1)
+    }
+    if (scene !== undefined) {
+        characterList = scene.characterList.children.entries
+        characterList.forEach(member => {
+            if (member.data.values.is_selected == true) {
+                selected.push(member)
+            }
+        })
+        console.log(selected)
+        return selected
     }
 }
 
@@ -111,7 +128,7 @@ function updateCharacterHealth(character, newHealth) {
  * @param {string} characterName - the character's name
  * @return {object} A container object of the character
  */
-export function getCharacterByName(scene, characterName) {
+function getCharacterByName(scene, characterName) {
     const characterList = scene.characterList.children.entries
     let character = {}
     characterList.forEach(member => {
@@ -120,4 +137,45 @@ export function getCharacterByName(scene, characterName) {
         }
     })
     return character
+}
+
+/**
+ * Checks if character has a skill
+ * @memberof Functions
+ * @param {object} character - A character container
+ * @param {string} skill - A skill text from a card
+ * @return {boolean} Whether the character has the skill or not
+ */
+function checkSkills(character, skill) {
+    const characterSkill = character.data.values.skills
+    if (characterSkill.includes(skill)) {
+        return true
+    } else {
+        return false
+    }
+}
+
+/**
+ * Checks if selections are valid based on charactes and current card
+ * @memberof Functions
+ * @param {object} scene - A Phaser scene with characterList
+ * @return {boolean} Whether the selections are valid based on card
+ */
+export function validateTargets(scene) {
+    const characterList = scene.characterList.children.entries
+    const currentCard = scene.gameStats.data.values.card
+    const skill = currentCard.skill
+    let count = 0
+    let status = false
+    characterList.forEach(character => {
+        if (character.data.values.is_selected == true) {
+            count++
+            if (count == currentCard.numTargets && checkSkills(character, skill)) {
+                status = true
+            } else {
+                status = false
+            }
+        }
+    })
+    return status
 }
