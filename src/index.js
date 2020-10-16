@@ -10,7 +10,8 @@ const ignoreButtonImg = "../dist/assets/ignore-button.png"
 const confirmButtonImg = "../dist/assets/confirm-button.png"
 import {
     getCard,
-    addCharacter
+    addCharacter,
+    renderCard
 } from "./functions.js"
 
 const screenWidth = 1920
@@ -45,7 +46,7 @@ mainScene.create = function(data) {
     this.gameStats.setDataEnabled()
     this.gameStats.setData({
         "rocket": 0,
-        "gameState": 1,
+        "gameState": 5,
         "card": {}
     })
 
@@ -59,16 +60,9 @@ mainScene.create = function(data) {
             width: 650
         }
     })
-    const currentCard = getCard(this.gameStats.data.values.gameState)
-    this.gameStats.data.set("card", currentCard)
-    const cardText = this.add.text(58, 275, "card: " + currentCard.text, {
-        fontSize: 40,
-        color: "red",
-        backgroundColor: "white",
-        wordWrap: {
-            width: 650
-        }
-    })
+    
+    renderCard(this)
+
     const progressText = this.add.text(58, 575, "stage completion: " + ((this.gameStats.data.values.gameState / 16 * 100) + "%"), {
         fontSize: 40,
         color: "red",
@@ -154,4 +148,3 @@ const config = {
 
 
 export const game = new Phaser.Game(config)
-export const scene = game.scene.getScene('mainScene')

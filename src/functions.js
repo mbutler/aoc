@@ -18,6 +18,34 @@ export function getCard(index) {
 }
 
 /**
+ * Renders the card object to the screen and data
+ * @memberof Functions
+ * @param {object} scene - The current Phaser scene
+ * @return {object} - card Text object
+ */
+export function renderCard(scene) {
+    const currentCard = getCard(scene.gameStats.data.values.gameState)
+    scene.gameStats.data.set("card", currentCard)
+    let targets = currentCard.targets.toString()
+    if (currentCard.targets.length == 0) { targets = "They" }
+    let cardText, cardInstructions
+    if (currentCard.type == "care") {
+        cardInstructions = ` Select a total of ${targets} characters with a skill of ${currentCard.skill}.`
+    } else {
+        cardInstructions = ` ${targets} receive ${currentCard.value}.`
+    }
+    cardText = scene.add.text(58, 275, currentCard.text + cardInstructions, {
+        fontSize: 40,
+        color: "red",
+        backgroundColor: "white",
+        wordWrap: {
+            width: 650
+        }
+    })    
+    return cardText
+}
+
+/**
  * Add and return a character container with stats
  * @memberof Functions
  * @param {object} scene - object
