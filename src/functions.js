@@ -30,7 +30,7 @@ export function renderCard(scene) {
     if (currentCard.targets.length == 0) { targets = "They" }
     let cardText, cardInstructions
     if (currentCard.type == "care") {
-        cardInstructions = ` Select a total of ${targets} characters with a skill of ${currentCard.skill}.`
+        cardInstructions = ` Select a total of ${currentCard.numTargets} characters with a skill of ${currentCard.skill}.`
     } else {
         cardInstructions = ` ${targets} receive ${currentCard.value}.`
     }

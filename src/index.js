@@ -46,7 +46,7 @@ mainScene.create = function(data) {
     this.gameStats.setDataEnabled()
     this.gameStats.setData({
         "rocket": 0,
-        "gameState": 5,
+        "gameState": 1,
         "card": {}
     })
 
@@ -59,9 +59,7 @@ mainScene.create = function(data) {
         wordWrap: {
             width: 650
         }
-    })
-    
-    renderCard(this)
+    })   
 
     const progressText = this.add.text(58, 575, "stage completion: " + ((this.gameStats.data.values.gameState / 16 * 100) + "%"), {
         fontSize: 40,
@@ -71,6 +69,8 @@ mainScene.create = function(data) {
             width: 650
         }
     })
+
+    renderCard(this)
 
     const blaise = addCharacter(this, 0, 717, "character", {
         "name": "blaise",
